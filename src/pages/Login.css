@@ -1,0 +1,468 @@
+/* =========================================================
+   Quantum Mail — Login
+   Theme: Clean white, dark ink typography, slate accents
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap');
+
+/* ── Reset & base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── CSS Variables ── */
+:root {
+  --bg:           #f0f2f5;
+  --surface:      #ffffff;
+  --surface-2:    #f7f8fa;
+
+  --border:       rgba(0, 0, 0, 0.08);
+  --border-focus: rgba(15, 23, 42, 0.6);
+
+  --text-primary:   #0f172a;
+  --text-secondary: #64748b;
+  --text-muted:     #94a3b8;
+
+  --accent:         #0f172a;
+  --accent-hover:   #1e293b;
+  --accent-dim:     rgba(15, 23, 42, 0.06);
+  --accent-glow:    rgba(15, 23, 42, 0.08);
+
+  --highlight:      #6366f1;
+  --highlight-dim:  rgba(99, 102, 241, 0.08);
+
+  --error:          #ef4444;
+  --error-dim:      rgba(239, 68, 68, 0.07);
+
+  --radius:    16px;
+  --radius-sm:  9px;
+
+  --font-display: 'Syne', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  --transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --shadow-card:
+    0 0 0 1px rgba(0,0,0,0.05),
+    0 4px 6px -1px rgba(0,0,0,0.04),
+    0 20px 48px -8px rgba(0,0,0,0.10);
+}
+
+/* ── Wrapper ── */
+.auth-wrapper {
+  min-height: 100vh;
+  background-color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: var(--font-display);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Soft background blobs ── */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform;
+}
+.orb-1 {
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%);
+  top: -180px; left: -160px;
+  animation: drift-1 20s ease-in-out infinite alternate;
+}
+.orb-2 {
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(236,72,153,0.07) 0%, transparent 70%);
+  bottom: -120px; right: -80px;
+  animation: drift-2 16s ease-in-out infinite alternate;
+}
+.orb-3 {
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%);
+  top: 55%; right: 18%;
+  animation: drift-1 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes drift-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(36px, 26px) scale(1.08); }
+}
+@keyframes drift-2 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-28px, -18px) scale(1.05); }
+}
+
+/* ── Grid overlay (very subtle) ── */
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 0%, transparent 100%);
+}
+
+/* ── Container ── */
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  animation: enter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Brand ── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: enter 0.5s 0.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border: 1.5px solid rgba(15, 23, 42, 0.15);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+/* ── Card ── */
+.auth-card {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 38px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  animation: enter 0.55s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Decorative top strip */
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* ── Card header ── */
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+}
+.auth-title {
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+.auth-subtitle {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* ── Fields ── */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field-group label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+}
+
+.field-group.focused label {
+  color: var(--highlight);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition);
+}
+
+.field-group.focused .input-icon {
+  color: var(--highlight);
+}
+
+.input-wrapper input {
+  width: 100%;
+  height: 46px;
+  padding: 0 16px 0 42px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  outline: none;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+
+.input-wrapper input::placeholder {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Default "Email" / "Password" text styling */
+.input-wrapper input.placeholder-style {
+  color: var(--text-muted);
+}
+
+.input-wrapper input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px #f7f8fa inset;
+  -webkit-text-fill-color: var(--text-primary);
+  caret-color: var(--highlight);
+}
+
+.input-wrapper input:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.1),
+    0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ── Error ── */
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--error-dim);
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--error);
+  letter-spacing: 0.01em;
+  animation: shake 0.35s cubic-bezier(0.36,0.07,0.19,0.97);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60%  { transform: translateX(-5px); }
+  40%, 80%  { transform: translateX(5px); }
+}
+
+/* ── Primary button ── */
+.auth-btn {
+  height: 48px;
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.12),
+    0 4px 16px rgba(15,23,42,0.18);
+}
+
+.auth-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 55%);
+}
+
+.auth-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.14),
+    0 8px 24px rgba(15,23,42,0.22);
+}
+
+.auth-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.auth-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.auth-btn.loading { pointer-events: none; }
+
+.btn-arrow {
+  transition: transform var(--transition);
+}
+.auth-btn:hover .btn-arrow {
+  transform: translateX(3px);
+}
+
+/* Spinner */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Divider ── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-divider span {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* ── Register button ── */
+.register-btn {
+  height: 44px;
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    color var(--transition),
+    background var(--transition);
+}
+
+.register-btn:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  color: var(--highlight);
+  background: var(--highlight-dim);
+}
+
+/* ── Footer ── */
+.auth-footer {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: enter 0.55s 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.auth-footer::before,
+.auth-footer::after {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #6366f1;
+  opacity: 0.45;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 28px 22px;
+    border-radius: 13px;
+  }
+  .auth-title {
+    font-size: 22px;
+  }
+}
